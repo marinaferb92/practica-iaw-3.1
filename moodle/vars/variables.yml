@@ -1,0 +1,37 @@
+frontend_private_ip: 172.31.39.61
+
+db:
+  name: moodle_db
+  user: moodle_user
+  password: moodle_password
+  host: 172.31.45.186
+
+moodle:
+  directory: /var/www/moodle
+  dataroot: /var/www/moodledata
+  lang: es
+  type: mysqli
+  fullname: "Moodle Completo"
+  shortname: "Moodle"
+  summary: "Resumen de Moodle"
+  admin:
+    user: admin
+    password: adminpassword
+    email: admin@example.com
+
+certbot:
+  email: otrousuario@email.es
+  domain: moodleansible.ddns.net
+
+phpmyadmin:
+  user: pma_user
+  password: pma_password
+  db_name: db_name
+
+moodle_url: "https://moodleansible.ddns.net"
+
+php:
+  max_input_vars: 5000
+  memory_limit: 256M
+  post_max_size: 128M
+  upload_max_filesize: 128M

@@ -1,0 +1,113 @@
+---
+- name: Playbook para el despliegue de Moodle
+  hosts: frontend
+  become: yes
+
+  vars_files:
+    - ../vars/variables.yml
+
+  tasks:
+
+    - name: Eliminar descargas previas de Moodle en /tmp
+      file:
+        path: /tmp/moodle-latest-405.tgz
+        state: absent
+
+    - name: Descargar la última versión estable de Moodle
+      get_url:
+        url: https://download.moodle.org/download.php/direct/stable405/moodle-latest-405.tgz
+        dest: /tmp/moodle-latest-405.tgz
+        mode: 0644
+
+    - name: Extraer el archivo descargado de Moodle
+      unarchive:
+        src: /tmp/moodle-latest-405.tgz
+        dest: /tmp
+        remote_src: true
+
+    - name: Preparar el directorio de instalación de Moodle
+      file:
+        path: "{{ moodle_directory }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: 0755
+        recurse: true
+
+    - name: Eliminar cualquier instalación previa en el directorio de Moodle
+      file:
+        path: "{{ moodle_directory }}/*"
+        state: absent
+
+    - name: Mover los archivos extraídos al directorio de instalación
+      copy:
+        src: /tmp/moodle/
+        dest: "{{ moodle_directory }}"
+        remote_src: true
+
+    - name: Cambiar permisos del directorio de Moodle
+      file:
+        path: "{{ moodle_directory }}"
+        owner: www-data
+        group: www-data
+        recurse: yes
+        mode: 0755
+
+    - name: Copiar archivo .htaccess
+      copy:
+        src: ../htaccess/.htaccess
+        dest: "{{ moodle_directory }}/.htaccess"
+
+    - name: Crear el directorio de datos de Moodle
+      file:
+        path: "{{ moodle_dataroot }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: 0755
+
+    - name: Ejecutar la instalación de Moodle
+      command:
+        cmd: >
+          php "{{ moodle_directory }}/admin/cli/install.php"
+          --lang="{{ moodle_lang }}"
+          --wwwroot="{{ moodle_url }}"
+          --dataroot="{{ moodle_dataroot }}"
+          --dbtype="{{ moodle_type }}"
+          --dbname="{{ db.name }}"
+          --dbuser="{{ db.user }}"
+          --dbpass="{{ db.password }}"
+          --dbhost="{{ db.host }}"
+          --fullname="{{ moodle.fullname }}"
+          --shortname="{{ moodle.shortname }}"
+          --summary="{{ moodle.summary }}"
+          --adminuser="{{ moodle.admin.user }}"
+          --adminpass="{{ moodle.admin.password }}"
+          --adminemail="{{ moodle.admin.email }}"
+          --non-interactive
+          --agree-license
+      args:
+        chdir: "{{ moodle_directory }}"
+      register: moodle_install_output
+      failed_when: "'successfully installed' not in moodle_install_output.stdout"
+
+    - name: Configurar redirección de HTTP a HTTPS
+      lineinfile:
+        path: /etc/apache2/sites-available/000-default.conf
+        regexp: '<VirtualHost \*:80>'
+        insertafter: '<VirtualHost *:80>'
+        line: 'Redirect permanent / https://{{ moodle_url }}'
+
+    - name: Verificar configuración de Apache
+      command: apachectl configtest
+
+    - name: Reiniciar Apache para aplicar cambios de SSL y redirección
+      service:
+        name: apache2
+        state: restarted
+
+    - name: Verificar estado de Apache
+      service:
+        name: apache2
+        state: started
+
