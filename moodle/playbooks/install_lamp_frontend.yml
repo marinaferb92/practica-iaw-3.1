@@ -37,6 +37,12 @@
         regexp: ";max_input_vars = 1000"
         replace: "max_input_vars = 5000"
 
+    - name: Modificar el valor max_input_vars de PHP
+      replace: 
+        path: /etc/php/8.3/cli/php.ini
+        regexp: ";max_input_vars = 1000"
+        replace: "max_input_vars = 5000"
+
     - name: Modificar el valor de memory_limit de PHP
       replace: 
         path: /etc/php/8.3/apache2/php.ini

@@ -27,7 +27,7 @@
 
     - name: Preparar el directorio de instalación de Moodle
       file:
-        path: "{{ moodle_directory }}"
+        path: "{{ moodle.directory }}"
         state: directory
         owner: www-data
         group: www-data
@@ -36,18 +36,18 @@
 
     - name: Eliminar cualquier instalación previa en el directorio de Moodle
       file:
-        path: "{{ moodle_directory }}/*"
+        path: "{{ moodle.directory }}/*"
         state: absent
 
     - name: Mover los archivos extraídos al directorio de instalación
       copy:
         src: /tmp/moodle/
-        dest: "{{ moodle_directory }}"
+        dest: "{{ moodle.directory }}"
         remote_src: true
 
     - name: Cambiar permisos del directorio de Moodle
       file:
-        path: "{{ moodle_directory }}"
+        path: "{{ moodle.directory }}"
         owner: www-data
         group: www-data
         recurse: yes
@@ -56,24 +56,24 @@
     - name: Copiar archivo .htaccess
       copy:
         src: ../htaccess/.htaccess
-        dest: "{{ moodle_directory }}/.htaccess"
+        dest: "{{ moodle.directory }}/.htaccess"
 
     - name: Crear el directorio de datos de Moodle
       file:
-        path: "{{ moodle_dataroot }}"
+        path: "{{ moodle.dataroot }}"
         state: directory
         owner: www-data
         group: www-data
         mode: 0755
 
-    - name: Ejecutar la instalación de Moodle
+    - name: Ejecutar la instalación completa de Moodle
       command:
         cmd: >
-          php "{{ moodle_directory }}/admin/cli/install.php"
-          --lang="{{ moodle_lang }}"
-          --wwwroot="{{ moodle_url }}"
-          --dataroot="{{ moodle_dataroot }}"
-          --dbtype="{{ moodle_type }}"
+          php "{{ moodle.directory }}/admin/cli/install.php"
+          --lang="{{ moodle.lang }}"
+          --wwwroot="{{ moodle.url }}"
+          --dataroot="{{ moodle.dataroot }}"
+          --dbtype="{{ moodle.type }}"
           --dbname="{{ db.name }}"
           --dbuser="{{ db.user }}"
           --dbpass="{{ db.password }}"
@@ -86,8 +86,6 @@
           --adminemail="{{ moodle.admin.email }}"
           --non-interactive
           --agree-license
-      args:
-        chdir: "{{ moodle_directory }}"
       register: moodle_install_output
       failed_when: "'successfully installed' not in moodle_install_output.stdout"
 
@@ -96,7 +94,7 @@
         path: /etc/apache2/sites-available/000-default.conf
         regexp: '<VirtualHost \*:80>'
         insertafter: '<VirtualHost *:80>'
-        line: 'Redirect permanent / https://{{ moodle_url }}'
+        line: 'Redirect permanent / https://{{ moodle.url }}'
 
     - name: Verificar configuración de Apache
       command: apachectl configtest
@@ -110,4 +108,3 @@
       service:
         name: apache2
         state: started
-

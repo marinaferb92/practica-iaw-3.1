@@ -1,14 +1,15 @@
-frontend_private_ip: 172.31.39.61
+frontend_private_ip: 172.31.42.98
 
 db:
   name: moodle_db
-  user: moodle_user
-  password: moodle_password
-  host: 172.31.45.186
+  user: user
+  password: user
+  host: "172.31.39.89"
 
 moodle:
   directory: /var/www/moodle
   dataroot: /var/www/moodledata
+  url: "https://moodleansible.ddns.net"
   lang: es
   type: mysqli
   fullname: "Moodle Completo"
@@ -28,7 +29,6 @@ phpmyadmin:
   password: pma_password
   db_name: db_name
 
-moodle_url: "https://moodleansible.ddns.net"
 
 php:
   max_input_vars: 5000

@@ -7,6 +7,7 @@
     - ../vars/variables.yml
 
   tasks:
+
     - name: Actualizar los repositorios
       apt:
         update_cache: yes
@@ -39,34 +40,10 @@
     - name: Configuramos MySQL para permitir conexiones desde cualquier interfaz
       replace:
         path: /etc/mysql/mysql.conf.d/mysqld.cnf
-        regexp: '127.0.0.1'
-        replace: '0.0.0.0'
+        regexp: 127.0.0.1
+        replace: 0.0.0.0
 
-    - name: Configurar el formato de archivo de MySQL a Barracuda
-      lineinfile:
-        path: /etc/mysql/mysql.conf.d/mysqld.cnf
-        regexp: '^innodb_file_format'
-        line: 'innodb_file_format=Barracuda'
-      notify:
-        - Reiniciar servicio mysql
-
-    - name: Activar la opción innodb_large_prefix en MySQL
-      lineinfile:
-        path: /etc/mysql/mysql.conf.d/mysqld.cnf
-        regexp: '^innodb_large_prefix'
-        line: 'innodb_large_prefix=ON'
-      notify:
-        - Reiniciar servicio mysql
-
-    - name: Verificar si el servicio de MySQL está en ejecución antes de reiniciar
-      systemd:
-        name: mysql
-        state: started
-        enabled: yes
-
-  handlers:
-    - name: Reiniciar servicio mysql
+    - name: Reiniciamos el servicio de base de datos
       service:
         name: mysql
         state: restarted
-        enabled: yes
