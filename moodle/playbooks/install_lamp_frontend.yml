@@ -4,6 +4,7 @@
   become: yes
 
   tasks:
+
     - name: Actualizar los repositorios
       apt:
         update_cache: yes
@@ -15,45 +16,88 @@
 
     - name: Instalar PHP y los módulos necesarios
       apt: 
-        name:
+        name: 
           - php
-          - php-mysql
           - libapache2-mod-php
-          - php-bcmath
-          - php-curl
-          - php-gd
-          - php-imagick
-          - php-intl
-          - php-memcached
+          - php-mysql
+          - php-xml
           - php-mbstring
-          - php-dom
+          - php-curl
           - php-zip
+          - php-gd
+          - php-intl
+          - php-soap
+          - php-ldap
+          - php-opcache
           - php-cli
         state: present
 
-    - name: Modificar el valor max_input_vars de PHP
+    - name: Modificamos el valor max_input_vars de PHP
       replace: 
         path: /etc/php/8.3/apache2/php.ini
-        regexp: ";max_input_vars = 1000"
-        replace: "max_input_vars = 5000"
+        regexp: max_input_vars = 1000
+        replace: max_input_vars = 5000
 
-    - name: Modificar el valor de memory_limit de PHP
+    - name: Modificamos el valor max_input_vars de PHP
+      replace: 
+        path: /etc/php/8.3/cli/php.ini
+        regexp: max_input_vars = 1000
+        replace: max_input_vars = 5000
+
+
+
+
+    - name: Modificamos el valor de memory_limit de PHP
       replace: 
         path: /etc/php/8.3/apache2/php.ini
-        regexp: "memory_limit = 128M"
-        replace: "memory_limit = 256M"
+        regexp: memory_limit = 128M
+        replace: memory_limit = 256M
 
-    - name: Modificar el valor de post_max_size de PHP
+    - name: Modificamos el valor memory_limit de PHP CLI
+      replace:
+        path: /etc/php/8.3/cli/php.ini
+        regexp: memory_limits= 128M
+        replace: memory_limit = 256M
+
+
+    - name: Modificamos el valor de post_max_size de PHP
       replace: 
         path: /etc/php/8.3/apache2/php.ini
-        regexp: "post_max_size = 8M"
-        replace: "post_max_size = 128M"
+        regexp: post_max_size = 8M
+        replace: post_max_size = 128M
 
-    - name: Modificar el valor de upload_max_filesize de PHP
+    - name: Modificamos el valor de post_max_size de PHP
+      replace: 
+        path: /etc/php/8.3/cli/php.ini
+        regexp: post_max_size = 8M
+        replace: post_max_size = 128M
+
+
+
+    - name: Modificamos el valor de upload_max_filesize de PHP
       replace:
         path: /etc/php/8.3/apache2/php.ini
-        regexp: "upload_max_filesize = 2M"
-        replace: "upload_max_filesize = 128M"
+        regexp: upload_max_filesize = 2M
+        replace: upload_max_filesize = 128M
+
+    - name: Modificamos el valor de upload_max_filesize de PHP
+      replace:
+        path: /etc/php/8.3/cli/php.ini
+        regexp: upload_max_filesize = 2M
+        replace: upload_max_filesize = 128M
+
+
+
+    - name: Modificamos el valor max_execution_time de PHP
+      replace:
+        path: /etc/php/8.3/apache2/php.ini
+        regexp: '^;max_execution_time\s=.*'
+        replace: 'max_execution_time = 300'
+    - name: Modificamos el valor max_execution_time de PHP CLI
+      replace:
+        path: /etc/php/8.3/cli/php.ini
+        regexp: '^;max_execution_time\s=.*'
+        replace: 'max_execution_time = 300'
 
     - name: Copiar el archivo de configuración de Apache
       copy:
