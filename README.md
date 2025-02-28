@@ -18,7 +18,7 @@ tambien tendremos que tener nuestro dominio definido con la ip publica del balan
 
 ![image](https://github.com/user-attachments/assets/e95afabb-ac0c-47b5-b4b8-1bcd06debc12)
 
-admin moodle
+Una vez hecho esto ejecutamos [main.yml](moodle/main.yml), donde tendremos puestos todos los playbooks en el orden de ejcución que queremos, con el comando 
 
 ![W1FXFB2acW](https://github.com/user-attachments/assets/94076bb0-377c-4338-854e-cb42540748f8)
 
