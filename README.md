@@ -22,6 +22,10 @@ Una vez hecho esto ejecutamos [main.yml](moodle/main.yml), donde tendremos puest
 
 ![eH8SlbNu8Y](https://github.com/user-attachments/assets/793e42f9-e037-43dd-b156-7ff9f86ee49f)
 
+Una vez terminado nos dará un resumen de los cambios que ha realizado
+![image](https://github.com/user-attachments/assets/8e0cf537-b1cc-4191-ab3b-19c5b73b4cdd)
+
+
 Una vez hecho esto podremos entrar en nuestro moodle y entrando en el administrador con las claves predefinidas en las variables, podremos comenzar a configurarlo.
 
 ![W1FXFB2acW](https://github.com/user-attachments/assets/94076bb0-377c-4338-854e-cb42540748f8)
