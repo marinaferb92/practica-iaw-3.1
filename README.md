@@ -5,16 +5,17 @@
 En esta práctica, el objetivo es automatizar una instalación de Moodle utilizando una arquitectura de dos niveles, backend y frontend, en Amazon Web Services con Ansible.
 
 
-1. <ins>Capa de Balanceador de carga (Load Balancer)</ins>:
-- Nginx como servidor de 
+Para ello crearemos 5 maquinas como en la [actividad 1.11](https://github.com/marinaferb92/practica-iaw-1.11) 
+
+tendremos que tener en cuentas las ips de cada maquina para definirlas dentro del inventario de Ansible
+![image](https://github.com/user-attachments/assets/7f0b6377-b681-4831-ad89-05fbb89689c8)
+
+En cada playboock deberemos definir en que maquina queremos que se ejecuten los cambios 
+![image](https://github.com/user-attachments/assets/f198a39c-48ba-483f-88c1-71ee0386820d)
 
 
-![image](https://github.com/user-attachments/assets/65aaf199-84dd-4132-b627-771f7fa25198)
-![image](https://github.com/user-attachments/assets/278bf56a-90db-40d9-a747-243c4be3eaf1)
-![image](https://github.com/user-attachments/assets/b86eab8a-68c5-4793-b0fe-b399d38864ab)
+tambien tendremos que tener nuestro dominio definido con la ip publica del balanceador para definirla dentro del arfchivo de variables [variables.yml](moodle/vars/variables.yml)
 
-
-noip
 ![image](https://github.com/user-attachments/assets/e95afabb-ac0c-47b5-b4b8-1bcd06debc12)
 
 admin moodle
